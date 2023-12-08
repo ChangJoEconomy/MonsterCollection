@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>몬컬 계산기</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="inputForm">
+        <h1>몬스터 컬렉션</h1>
+        <div class="gridContainer">
+            <div class="inputContainer">
+                <label>궁수 링크 레벨</label>
+                <input type="number" id="archerLv" class="numberInput" value="6" min="0", max="6">
+                <p id="invaildArcherLv" class="invaildAlert">0~6의 숫자를 입력해야 합니다!</p>
+            </div>
+            <div class="inputContainer">
+                <label>선데이 2배</label>
+                <div class="select">
+                    <input type="radio" id="doubleEvent" name="event" value="true"><label for="doubleEvent">적용</label>
+                    <input type="radio" id="noneEvent" name="event" value = "false" checked="checked"><label for="noneEvent">미적용</label>
+               </div>
+            </div>
+            <div class="inputContainer">
+                <label>몬스터 별 개수</label><input type="number" id="monsterStar" class="numberInput" min="1", max="5">
+                <p id="invaildMonsterStar" class="invaildAlert">1~5의 숫자를 입력해야 합니다!</p>
+            </div>
+            <div class="inputContainer">
+                <label>몬스터 레벨</label><input type="number" id="monsterLv" class="numberInput" min="1", max="300">
+                <p id="invaildMonsterLv" class="invaildAlert">양의 숫자를 입력해야 합니다!</p>
+            </div>
+        </div>        
+
+        <div class="monsterTypeContainer">
+            <input type="radio" id="normalMonster" value="0" name="monsterType"checked="checked"/>
+            <label for="normalMonster">일반몹</label>
+
+            <input type="radio" id="forceMonster" value="1" name="monsterType" />
+            <label for="forceMonster">포스몹</label>
+            
+            <input type="radio" id="eliteMonster" value="2" name="monsterType" />
+            <label for="eliteMonster">엘몹</label>
+            
+            <input type="radio" id="bossMonster" value="3" name="monsterType" />
+            <label for="bossMonster">보스</label>
+        </div>
+        <p id="invaildMonsterType" class="invaildAlert">몬스터 타입이 잘못 되었습니다!</p>
+        
+        <button type="button" id="calculateButton">계산</button>
+    </div>
+    <div class="outputForm">
+        <div class="probabilityContainer">
+            <h2>확률</h2>
+            <p id="probability">0.000%</p>
+        </div>
+        <div>
+            <h2>기대값</h2>
+            <div style="width: 100%;">
+	            <!--차트가 그려질 부분-->
+	            <canvas id="exValChart"></canvas>
+            </div>
+        </div>
+        <p id="limitTrial">등록 천장: <span></span></p>
+        <p id="avgTrial">평균 시도 횟수: <span></span></p>
+        <div class="exValInputContainer">
+            <div class="input-box">
+                <span class="prefix">상위</span>
+                <input id="exPro" type="text">
+                <span class="suffix">%</span>
+            </div>
+            <span class="swap-icon">=</span>
+            <div class="input-box">
+                <input id="exTrial" type="text">
+                <span class="suffix">마리</span>
+            </div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
