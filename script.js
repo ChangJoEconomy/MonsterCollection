@@ -67,6 +67,7 @@ const exValChart = new Chart(ctx, {
 });
 
 let probablSucc = 0;
+let limitTrial = 0;
 
 
 document.getElementById("archerLv").addEventListener("focus", function() {
@@ -134,7 +135,7 @@ document.getElementById("calculateButton").addEventListener("click", function() 
     }
     if(invaildChk) return;
     
-    let limitTrial = 1;
+    limitTrial = 0;
     if(monsterLv<=10) limitTrial = 100;
     else if(monsterLv<=20) limitTrial = 200;
     else if(monsterLv<=30) limitTrial = 240;
@@ -146,9 +147,8 @@ document.getElementById("calculateButton").addEventListener("click", function() 
 
     const probability = calcProbability(archerLv, doubleEventChk, monsterStar, monsterLv, monsterType);
     let avgTrial;
-    if(monsterLv<=120)  avgTrial = Math.min(1/probability, limitTrial);
+    if(monsterLv<=120)  avgTrial = avgTrialCalc(probability, limitTrial);
     else avgTrial = 1/probability;
-    console.log(avgTrial);
     avgTrial = (Math.floor(avgTrial*1000))/1000;
     if (!Number.isInteger(avgTrial)) avgTrial = Math.floor(avgTrial) + 1;
 
@@ -160,6 +160,17 @@ document.getElementById("calculateButton").addEventListener("click", function() 
     drawChart(probability, limitTrial);
 });
 
+function avgTrialCalc(succPro, limitTrial) {
+    let averageAttempts = 0;
+    // 시그마 k=(1, 천장) k*((1-확률)^(k-1))*확률
+    for (let k = 1; k <= limitTrial; k++) {
+        averageAttempts += k * Math.pow(1 - succPro, k - 1) * succPro;
+        console.log(averageAttempts);
+    }
+    console.log(averageAttempts, succPro, limitTrial);
+    return averageAttempts;
+}
+
 function calcProbability(archerLv, doubleProb, mobStar, mobLv, mobType) {
     const addiProb = 100 + (100*doubleProb) + (5*archerLv + 5*(archerLv>0));  // 추가 확률(기본 100% + 선데이 2배 + 모험가 궁수 링크)
     let probability = 0;
@@ -167,26 +178,19 @@ function calcProbability(archerLv, doubleProb, mobStar, mobLv, mobType) {
         if(mobLv<100) {
             probability = (mobStar+1)*(3**(mobStar-3))/mobLv;
         }
-        else if(mobLv<=120){
+        else{
             probability = (10**(3*mobStar-2))/(mobLv**(mobStar+1));
-        }
-        else {  // 121레벨 부터는 레벨에 관계 없이 고정 확률
-            probability = 1/3000;
         }
     }
     else if(mobType==1) {  // 포스 몬스터
-        if(mobLv<=120) {
-            probability = 10/(mobLv**2);
-        }
-        else {
-            probability = 1/3000;
-        }
+        probability = 10/(mobLv**2);
     }
     else if(mobType==2) {  // 엘리트 몬스터 / 엘리트 보스
         probability = 4/9;
     }
     else if(mobType==3) {  // 보스 몬스터
-        probability = 0.02;
+        if(mobStar>=4) probability = 10/(mobStar*mobLv);
+        else probability = 0.02;
     }
     probability = probability*(addiProb/100);
     // 출력
@@ -213,7 +217,7 @@ function probabilityToTrial(n, probability) {
     }
 }
 
-function drawChart(probability, limitTrial) {
+function drawChart(probability) {
     // 각 확률별 기대 마릿수 계산
     let newYValues = [];
     if(limitTrial>0) newYValues.push(Math.min(limitTrial, probabilityToTrial(probability, 0.01)));
@@ -262,7 +266,8 @@ document.getElementById("exPro").addEventListener("keyup", function() {
     }
 
     // 계산값 표시
-    document.getElementById("exTrial").value = probabilityToTrial(probablSucc, numericValue/100);
+    if(limitTrial>0) document.getElementById("exTrial").value = Math.min(limitTrial, probabilityToTrial(probablSucc, numericValue/100));
+    else document.getElementById("exTrial").value = probabilityToTrial(probablSucc, numericValue/100);
 });
 
 document.getElementById("exTrial").addEventListener("keyup", function() {
@@ -289,5 +294,6 @@ document.getElementById("exTrial").addEventListener("keyup", function() {
     }
 
     // 계산값 표시
-    document.getElementById("exPro").value = Math.round(trialToProbability(probablSucc, integerValue)*100000)/1000;
+    if(limitTrial>0 && integerValue>limitTrial) document.getElementById("exPro").value = Math.round(trialToProbability(probablSucc, limitTrial)*100000)/1000;
+    else document.getElementById("exPro").value = Math.round(trialToProbability(probablSucc, integerValue)*100000)/1000;
 });
