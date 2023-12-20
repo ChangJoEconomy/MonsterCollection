@@ -108,6 +108,7 @@ const vaildMonsterType = [[false, false, false, false],
 document.getElementById("calculateButton").addEventListener("click", function() {
     const archerLv = parseInt(document.getElementById("archerLv").value);
     const doubleEventChk = document.querySelector('input[name="event"]:checked').value=="true";
+    const specialPoint = parseInt(document.querySelector('input[name="specialPoint"]:checked').value);  // 0~3(일반, 포스, 엘몹, 보스)
     const monsterStar = parseInt(document.getElementById("monsterStar").value);
     const monsterLv = parseInt(document.getElementById("monsterLv").value);
     const monsterType = parseInt(document.querySelector('input[name="monsterType"]:checked').value);  // 0~3(일반, 포스, 엘몹, 보스)
@@ -145,7 +146,7 @@ document.getElementById("calculateButton").addEventListener("click", function() 
     else if(monsterLv<=120) limitTrial = 5000;
     else limitTrial = -1;
 
-    const probability = calcProbability(archerLv, doubleEventChk, monsterStar, monsterLv, monsterType);
+    const probability = calcProbability(archerLv, doubleEventChk, specialPoint, monsterStar, monsterLv, monsterType);
     let avgTrial;
     if(monsterLv<=120)  avgTrial = avgTrialCalc(probability, limitTrial);
     else avgTrial = 1/probability;
@@ -171,8 +172,8 @@ function avgTrialCalc(succPro, limitTrial) {
     return averageAttempts;
 }
 
-function calcProbability(archerLv, doubleProb, mobStar, mobLv, mobType) {
-    const addiProb = 100 + (100*doubleProb) + (5*archerLv + 5*(archerLv>0));  // 추가 확률(기본 100% + 선데이 2배 + 모험가 궁수 링크)
+function calcProbability(archerLv, doubleProb, specialPoint, mobStar, mobLv, mobType) {
+    const addiProb = 100 + (100*doubleProb) + specialPoint + (5*archerLv + 5*(archerLv>0));  // 추가 확률(기본 100% + 선데이 2배 + 루시드 이벤트 포인트 + 모험가 궁수 링크)
     let probability = 0;
     if(mobType ==0) {  // 일반 몬스터
         if(mobLv<100) {
