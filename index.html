@@ -20,10 +20,22 @@
                 <div class="select">
                     <input type="radio" id="doubleEvent" name="event" value="true"><label for="doubleEvent">적용</label>
                     <input type="radio" id="noneEvent" name="event" value = "false" checked="checked"><label for="noneEvent">미적용</label>
-               </div>
             </div>
+            </div>
+        </div>
+        <div class="inputContainer" style="margin-bottom: 10px;">
+            <label>루시드 시크릿 포인트</label>
+            <div class="select">
+                <input type="radio" id="0Lv" name="specialPoint" value="0" checked="checked"><label for="0Lv">0Lv</label>
+                <input type="radio" id="1Lv" name="specialPoint" value = "25"><label for="1Lv">1Lv</label>
+                <input type="radio" id="2Lv" name="specialPoint" value="40"><label for="2Lv">2Lv</label>
+                <input type="radio" id="3Lv" name="specialPoint" value = "65"><label for="3Lv">3Lv</label>
+                <input type="radio" id="4Lv" name="specialPoint" value="100"><label for="4Lv">4Lv</label>
+        </div>
+        </div>
+        <div class="gridContainer">
             <div class="inputContainer">
-                <label>몬스터 별 개수</label><input type="number" id="monsterStar" class="numberInput" min="1", max="5">
+                <label>몬컬 별 개수</label><input type="number" id="monsterStar" class="numberInput" min="1", max="5">
                 <p id="invaildMonsterStar" class="invaildAlert">1~5의 숫자를 입력해야 합니다!</p>
             </div>
             <div class="inputContainer">
